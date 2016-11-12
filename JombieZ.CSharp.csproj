@@ -72,24 +72,32 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\BoobItem.cs" />
-    <Compile Include="Assets\CameraScripts.cs" />
-    <Compile Include="Assets\CharicterCon.cs" />
-    <Compile Include="Assets\GameManagerScripts.cs" />
-    <Compile Include="Assets\GunItem.cs" />
-    <Compile Include="Assets\InvenTorySystem.cs" />
-    <Compile Include="Assets\ItemScripts.cs" />
+    <Compile Include="Assets\Scripts\BoobItem.cs" />
+    <Compile Include="Assets\Scripts\CameraScripts.cs" />
+    <Compile Include="Assets\Scripts\CharicterCon.cs" />
     <Compile Include="Assets\Scripts\DeltaTImeData.cs" />
     <Compile Include="Assets\Scripts\GUITimer.cs" />
+    <Compile Include="Assets\Scripts\GameManagerScripts.cs" />
+    <Compile Include="Assets\Scripts\GrenadePrefebScripts.cs" />
+    <Compile Include="Assets\Scripts\GunBulletSCripts.cs" />
+    <Compile Include="Assets\Scripts\GunItem.cs" />
+    <Compile Include="Assets\Scripts\IetmMoving.cs" />
+    <Compile Include="Assets\Scripts\InvenTorySystem.cs" />
+    <Compile Include="Assets\Scripts\ItemScripts.cs" />
     <Compile Include="Assets\Scripts\SIngleTonData.cs" />
-    <Compile Include="Assets\SnifierItem.cs" />
-    <Compile Include="Assets\UICamera.cs" />
+    <Compile Include="Assets\Scripts\SnifierItem.cs" />
+    <Compile Include="Assets\Scripts\UICamera.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Free Guns Pack\READ_ME.txt" />
     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+    <None Include="Assets\Standard Assets\ParticleSystems\ParticleSystemsGuidelines.txt" />
+    <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader" />
+    <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAddSoft.shader" />
+    <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAlpha.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

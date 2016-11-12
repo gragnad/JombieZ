@@ -28,11 +28,15 @@ public class SIngleTonData
     //0 번 TPS 1번 저격 2번 uicamera
     public int camNumber = 0;
     //
-
+    public bool ShotCheck = false;
+    //
+    public bool SniperCheck = false;
     //
     public bool UiChangeItem = false;
     //
     public GameObject[] Inventory = new GameObject[4];
     public int InvenToryNumber = 0;
+    //
+
 
 }
