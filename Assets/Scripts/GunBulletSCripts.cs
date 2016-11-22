@@ -6,11 +6,14 @@ public class GunBulletSCripts : MonoBehaviour {
     Vector3 EndBulletPos;
     Vector3 EndBulletPosMinus;
 
+   GameObject B_Particle;
+    bool EffectCopyCheck = false;
     // Use this for initialization
     void Start () {
-        EndBulletPos= new Vector3(30,30,30);
-        EndBulletPosMinus = new Vector3(-30, -30, -30);
-                 
+        Vector3 DesCheck = transform.position;
+        EndBulletPos = new Vector3(DesCheck.x + 15, DesCheck.y + 15, DesCheck.z + 15);
+        EndBulletPosMinus = new Vector3(DesCheck.x + -15, DesCheck.y + -15, DesCheck.z + -15);
+        B_Particle = GameObject.FindGameObjectWithTag("Blood");          
     }
 	
 	// Update is called once per frame
@@ -22,11 +25,9 @@ public class GunBulletSCripts : MonoBehaviour {
 
     }
 
-
-
     void BulletBasic()
     {            
-         transform.position += transform.forward * DeltaTImeData.instance.DeltaTime * 5.0f;                     
+         transform.position += transform.forward * DeltaTImeData.instance.DeltaTime * 5.0f;       
     }
 
     void BulletDestory()
@@ -37,5 +38,30 @@ public class GunBulletSCripts : MonoBehaviour {
         {
             Destroy(gameObject);
         }
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if(col.CompareTag("Enumy"))
+        {          
+            StartCoroutine(BloodPartcle());
+        }
+    }
+
+    IEnumerator BloodPartcle()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        if(EffectCopyCheck == false)
+        {
+            GameObject BloodCreate = (GameObject)Instantiate(B_Particle, transform.position, transform.rotation);
+            EffectCopyCheck = true;
+            yield return new WaitForSeconds(0.8f);
+
+            Destroy(BloodCreate);
+            Destroy(gameObject);
+
+        }
+       
     }
 }

@@ -4,7 +4,14 @@ using System.Collections;
 
 public class CharicterCon : MonoBehaviour
 {
-
+    public float JumpPower = 4.5f;
+    public Animator animation;
+    public Rigidbody rigid;
+    int JumpState = 0;
+    int RunState = 0;
+    int BackState = 0;
+    int LeftState = 0;
+    int RightState = 0;
     //이동만 넣고
     public GameObject Player = null;
     //
@@ -33,14 +40,21 @@ public class CharicterCon : MonoBehaviour
 
         ItemEatCheck = false;
 
-       
-
         EqiirMentItemPosition = GameObject.FindGameObjectWithTag("E_Item");
     }
     
     // Update is called once per frame
     void Update()
     {
+
+        if(Input.GetKeyUp(KeyCode.R))
+        {
+            SIngleTonData.instance.HPBar -= 0.5f;
+            if(SIngleTonData.instance.HPBar <= 0)
+            {
+                SIngleTonData.instance.HPBar = 4.0f;
+            }
+        }
 
         ChangeButtonClickItem();
 
@@ -146,23 +160,151 @@ public class CharicterCon : MonoBehaviour
 
     void BasicPlayerMove()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) && RunState == 0)
         {
             Player.transform.position += Player.transform.forward * 2.0f * DeltaTImeData.instance.DeltaTime;
+            StartCoroutine("StartRun");
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.W) && RunState == 1)
         {
-            Player.transform.position += Player.transform.forward * -2.0f * DeltaTImeData.instance.DeltaTime;
+            Player.transform.position += Player.transform.forward * 3.5f * DeltaTImeData.instance.DeltaTime;
         }
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKeyUp(KeyCode.W) && RunState == 1)
         {
-            Player.transform.position += Player.transform.right * 2.0f * DeltaTImeData.instance.DeltaTime;
+            rigid.AddForce(Player.transform.forward * 3.55f, ForceMode.Impulse);
+            StartCoroutine("EndRun");
         }
-        if (Input.GetKey(KeyCode.A))
+        ///////////////////////////////////////////////////
+        if (Input.GetKey(KeyCode.S) && BackState == 0)
         {
-            Player.transform.position += Player.transform.right * -2.0f * DeltaTImeData.instance.DeltaTime;
+            Player.transform.position += Player.transform.forward * -0.5f * DeltaTImeData.instance.DeltaTime;
+            StartCoroutine("StartBack");
         }
-       
+        if (Input.GetKey(KeyCode.S) && BackState == 1)
+        {
+            Player.transform.position += Player.transform.forward * -1.0f * DeltaTImeData.instance.DeltaTime;
+        }
+        if (Input.GetKeyUp(KeyCode.S) && BackState == 1)
+        {
+            rigid.AddForce(Player.transform.forward * -2.55f, ForceMode.Impulse);
+            StartCoroutine("EndBack");
+        }
+        /////////////////////////////////////////////////////
+        if (Input.GetKey(KeyCode.D) && RightState == 0)
+        {
+            Player.transform.position += Player.transform.right * 1.0f * DeltaTImeData.instance.DeltaTime;
+            StartCoroutine("StartLeft");
+        }
+        if (Input.GetKey(KeyCode.D) && RightState == 1)
+        {
+            Player.transform.position += Player.transform.right * 4.8f * DeltaTImeData.instance.DeltaTime;
+        }
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            rigid.AddForce(Player.transform.right * +2.5f, ForceMode.Impulse);
+            StartCoroutine("EndLeft");
+        }
+        ////////////////////////////////////////////////////
+        if (Input.GetKey(KeyCode.A) && LeftState == 0)
+        {
+            Player.transform.position += Player.transform.right * -1.0f * DeltaTImeData.instance.DeltaTime;
+            StartCoroutine("StartRight");
+        }
+        if (Input.GetKey(KeyCode.A) && LeftState == 1)
+        {
+            Player.transform.position += Player.transform.right * -4.8f * DeltaTImeData.instance.DeltaTime;
+        }
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            rigid.AddForce(Player.transform.right * -2.5f, ForceMode.Impulse);
+            StartCoroutine("EndRight");
+        }
+        if (Input.GetKey(KeyCode.Space) && JumpState == 0)
+        {
+            animation.SetBool("Jump", true);
+            rigid.velocity = Vector3.up * JumpPower;
+            StartCoroutine("Jump");
+        }
+
+    }
+
+    IEnumerator Jump()
+    {
+        JumpState = 1;
+        yield return new WaitForSeconds(1.0f);
+        JumpState = 0;
+        animation.SetBool("Jump", false);
+    }
+    IEnumerator StartRun()
+    {
+        animation.SetBool("RunStart", true);
+        yield return new WaitForSeconds(0.7f);
+        RunState = 1;
+        animation.SetBool("Run", true);
+        animation.SetBool("RunStart", false);
+
+    }
+    IEnumerator EndRun()
+    {
+        animation.SetBool("RunEnd", true);
+        animation.SetBool("Run", false);
+        yield return new WaitForSeconds(0.7f);
+        animation.SetBool("RunEnd", false);
+        RunState = 0;
+    }
+    ////////////////////////////
+    IEnumerator StartBack()
+    {
+        animation.SetBool("BackStart", true);
+        yield return new WaitForSeconds(0.5f);
+        BackState = 1;
+        animation.SetBool("Back", true);
+        animation.SetBool("BackStart", false);
+
+    }
+    IEnumerator EndBack()
+    {
+        animation.SetBool("BackEnd", true);
+        animation.SetBool("Back", false);
+        yield return new WaitForSeconds(0.7f);
+        animation.SetBool("BackEnd", false);
+        BackState = 0;
+    }
+    /////////////////////
+    IEnumerator StartLeft()
+    {
+        animation.SetBool("LeftStart", true);
+        yield return new WaitForSeconds(0.5f);
+        LeftState = 1;
+        animation.SetBool("Left", true);
+        animation.SetBool("LeftStart", false);
+
+    }
+    IEnumerator EndLeft()
+    {
+        animation.SetBool("LeftEnd", true);
+        animation.SetBool("Left", false);
+        yield return new WaitForSeconds(0.7f);
+        animation.SetBool("LeftEnd", false);
+        LeftState = 0;
+    }
+    /////////////////////////////////
+    IEnumerator StartRight()
+    {
+        animation.SetBool("RightStart", true);
+        yield return new WaitForSeconds(0.5f);
+        RightState = 1;
+        animation.SetBool("Right", true);
+        animation.SetBool("RightStart", false);
+
+    }
+    IEnumerator EndRight()
+    {
+        animation.SetBool("RightEnd", true);
+        animation.SetBool("Right", false);
+        yield return new WaitForSeconds(0.7f);
+        animation.SetBool("RightEnd", false);
+        RightState = 0;
     }
 
     //아이템 장착에 관한...

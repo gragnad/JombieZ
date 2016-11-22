@@ -39,4 +39,7 @@ public class SIngleTonData
     //
 
 
+
+    public float HPBar = 4.0f;
+
 }
