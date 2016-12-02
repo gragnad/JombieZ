@@ -5,14 +5,20 @@ public class CameraScripts : MonoBehaviour {
 
     public Camera MainCAm = null;
     public Camera UIcamera = null;
-
-
     public GameObject Player;
 
-    public GameObject PlayerHead;
+    public Light light = null;
+
+
+    public float MaxCameraDistance;
+    public float MinCameraDistance;
 
     Vector3 PlayerPos;
     Transform PlayerTranform;
+    //
+    public float CheckDistace;
+
+    float DisTanceSpeed;
 
     Vector3 caculationPos;
 
@@ -23,10 +29,10 @@ public class CameraScripts : MonoBehaviour {
     float Horizontal;
     float Vertical;
 
-    Quaternion m_CharicterTarget;
+   public  Quaternion m_CharicterTarget;
     Quaternion m_CamraTarget;
 
-    bool m_cursorIsLocked;
+    public bool m_cursorIsLocked;
 
     int LongShotCheck = 0;
     int longEimCheck = 0;
@@ -42,30 +48,74 @@ public class CameraScripts : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        //PlayerHead = Player.transform.FindChild("EthanHead").GetComponent<GameObject>();
+        
 
     }
+
+    void DisTanceSpeedCaculation()
+    {
+        if(0.0f < CheckDistace && 0.5f > CheckDistace)
+        {
+            DisTanceSpeed = 1.0f;
+        }
+        if (0.5f < CheckDistace && 1.5f > CheckDistace)
+        {
+            DisTanceSpeed = 2.0f;
+        }
+        if (1.5f < CheckDistace && 3.0f > CheckDistace)
+        {
+            DisTanceSpeed = 3.5f;
+        }
+
+    }
+
 	void PlayerPosUpdate()
     {
         PlayerPos = Player.transform.position;
         PlayerTranform = Player.transform;
+        Vector3 checklight = PlayerPos;
+        checklight.y += 1.6f;
+        light.transform.position = checklight;
+        camPos.MaincamPos = MainCAm.transform.position;
 
+        CheckDistace = Vector3.Distance(PlayerPos,camPos.MaincamPos);
+        //거리에 따른 카메라 속도값
+        DisTanceSpeedCaculation();
         //z 값이 앞뒤 이므로
-        if(SIngleTonData.instance.camNumber == 0)
-        {   
-           
-            Vector3 FollowMainCAm = PlayerTranform.forward * -2.0f;    
-            caculationPos = new Vector3(PlayerPos.x + FollowMainCAm.x, PlayerPos.y+FollowMainCAm.y + 1.5f, PlayerPos.z + FollowMainCAm.z);
-            MainCAm.fieldOfView = 60.0f;
-            camPos.MaincamPos = caculationPos;
+        if (SIngleTonData.instance.camNumber == 0)
+        {             
+            //if(SIngleTonData.instance.CharacterBackMove == false)
+            {
+                MainCAm.fieldOfView = 60.0f;
+                Vector3 DirctionPos = PlayerPos - camPos.MaincamPos;
+                Vector3 FollowMainCam = PlayerTranform.forward * -2.0f;
+                DirctionPos.x += FollowMainCam.x +0.5f;
+                DirctionPos.y += FollowMainCam.y+1.5f;
+                DirctionPos.z += FollowMainCam.z;
+                camPos.MaincamPos += Time.deltaTime * DirctionPos* DisTanceSpeed;
+            }
+
+            //기본 제일 작을시 원래로 돌아 오는거
+
+           /*if(SIngleTonData.instance.CharacterBackMove == true)
+            {
+                // MainCAm.transform.SetParent(Player.transform);
+                Vector3 DirctionPos = PlayerPos - camPos.MaincamPos;
+                Vector3 FollowMainCam = PlayerTranform.forward * -2.0f;
+                DirctionPos.x += FollowMainCam.x;
+                DirctionPos.y += FollowMainCam.y + 1.5f;
+                DirctionPos.z += FollowMainCam.z;
+                camPos.MaincamPos += Time.deltaTime * DirctionPos * DisTanceSpeed;
+            }*/
+            
         }
 
         else if(SIngleTonData.instance.camNumber == 1)
         {   
-           
+           //fps 는 그대로 가고 메인 캠만 따라오는거 체크
             Vector3 FollowFpsCam = PlayerTranform.forward * +0.5f;
             caculationPos = new Vector3(PlayerPos.x + FollowFpsCam.x, PlayerPos.y+FollowFpsCam.y + 1.5f, PlayerPos.z + FollowFpsCam.z);
-            MainCAm.fieldOfView = 40.0f;
+            MainCAm.fieldOfView = 20.0f;
             camPos.FPScamPos = caculationPos;          
         }
        
@@ -92,7 +142,7 @@ public class CameraScripts : MonoBehaviour {
         }
         else if (SIngleTonData.instance.camNumber == 1)
         {
-            MainCAm.transform.position = camPos.FPScamPos;
+            MainCAm.transform.position = camPos.FPScamPos;          
             UIcamera.transform.position = camPos.FPScamPos;
         }
     }
@@ -119,7 +169,7 @@ public class CameraScripts : MonoBehaviour {
                 LongShotCheck = 5;
                 longEimCheck = 0;
             }
-            else if(SIngleTonData.instance.ShotCheck == true)
+            else if(SIngleTonData.instance.ShotCheck == true && SIngleTonData.instance.Reload == false)
             {
                 if(SIngleTonData.instance.SniperCheck == false)
                 {
@@ -142,7 +192,8 @@ public class CameraScripts : MonoBehaviour {
                     m_CamraTarget = Quaternion.Euler(-PreVertical+(Time.deltaTime*-150.0f),PreHorizontal, 0);
                 }
                 Player.transform.rotation = m_CharicterTarget;
-                MainCAm.transform.rotation = m_CamraTarget;        
+                MainCAm.transform.rotation = m_CamraTarget; 
+                 light.transform.rotation = m_CamraTarget;
             }
 
 
@@ -153,14 +204,15 @@ public class CameraScripts : MonoBehaviour {
             if (SIngleTonData.instance.camNumber == 0 && SIngleTonData.instance.ShotCheck == false)
             {
                 Player.transform.rotation = m_CharicterTarget;
-               MainCAm.transform.localRotation = Quaternion.Euler(-PreVertical, 0,0);             
-                //PlayerHead.transform.localRotation = Quaternion.Euler(0,0, -PreVertical);
-                //PlayerHead.transform.localRotation = m_CamraTarget;
-
+                //MainCAm.transform.localRotation = Quaternion.Euler(-PreVertical, 0,0);          
+                MainCAm.transform.localRotation = m_CamraTarget;
+                light.transform.rotation = m_CamraTarget;
             }
             else if(SIngleTonData.instance.camNumber == 1)
             {
                 Player.transform.rotation = m_CamraTarget;
+                MainCAm.transform.localRotation = m_CamraTarget;
+                light.transform.rotation = m_CamraTarget;
             }
            
 
@@ -169,11 +221,8 @@ public class CameraScripts : MonoBehaviour {
     }
     private void InternalLockUpdate()
     {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            m_cursorIsLocked = false;
-        }
-        else if (Input.GetMouseButtonUp(0))
+        
+        if (Input.GetMouseButtonUp(0))
         {
             m_cursorIsLocked = true;
         }

@@ -6,19 +6,15 @@ public class IetmMoving : MonoBehaviour {
     float RotY;
 
 	// Use this for initialization
-	void Start () {
-	
-	}
 	
 	// Update is called once per frame
 	void Update () {
         LocalRotationUPdate();
-
     }
 
     void LocalRotationUPdate()
     {
-        if(transform.parent == null)
+        if(transform.parent.CompareTag("folder"))
         {
             float RotYPlus= Time.deltaTime * 30.0f;
             RotY += RotYPlus;          

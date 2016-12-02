@@ -19,7 +19,7 @@ public class UICamera : MonoBehaviour {
     public Text text4;
 
 
-    Image changemat;
+   public  Image changemat;
     //
     //
     /*struct UIPos
@@ -83,6 +83,17 @@ public class UICamera : MonoBehaviour {
         Checkbtn3.onClick.AddListener(btn3Click);
         Checkbtn4.onClick.AddListener(btn4Click);
 
+       
+
+    }
+
+    //좀더 생각해보자...
+    private void ChangeImgeSetPos()
+    {
+        Vector3 CheckPos = transform.position;
+        CheckPos.y -= -6;
+        CheckPos.z += 3;
+        changemat.transform.position = CheckPos;
     }
 
     private void CheckImage()

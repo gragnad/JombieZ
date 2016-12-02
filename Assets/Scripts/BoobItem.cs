@@ -13,6 +13,7 @@ public class BoobItem : ItemScripts
         //BulletCount = 3;
         Find_E_Parent();
         FindCam();
+        BulletPlus = 10;
     }
 
     // Update is called once per frame
@@ -27,6 +28,7 @@ public class BoobItem : ItemScripts
           && SIngleTonData.instance.ShotCheck == true)
             {
                 CreateBullet();
+                BulletPlus--;
                 BulletCount--;
                 SIngleTonData.instance.ShotCheck = false;
             }

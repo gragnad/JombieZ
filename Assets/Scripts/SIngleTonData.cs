@@ -37,9 +37,19 @@ public class SIngleTonData
     public GameObject[] Inventory = new GameObject[4];
     public int InvenToryNumber = 0;
     //
+    public GameObject[] g_BulletData = new GameObject[30];
+    public bool Reload = false;
+    //
+    public bool ShotGunUse = false;
 
 
-
+    //charater
+    public bool PlayerStop = false;
+    public bool CharacterBackMove = false;
     public float HPBar = 4.0f;
+
+    //미니맵
+    public GameObject[] g_MiniMapEnumy = new GameObject[20];
+
 
 }
